@@ -36,8 +36,13 @@ public class User {
     private Boolean isDelted;
 
     private Boolean isStudent;
-
     @OneToMany(mappedBy = "user")
-    private List<UserAccount> accounts;
+    //one user have many accounts
+    private List<UserAccount> userAccountList;
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(name = "user_roles",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id"))
+    private List<Role> roles;
 
 }

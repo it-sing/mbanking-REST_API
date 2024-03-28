@@ -15,10 +15,10 @@ import java.util.List;
 @Table(name = "role_authorities")
 public class RoleAuthorities {
     @Id
-    @GeneratedValue (strategy = GenerationType.IDENTITY)
-    private Long id;
-
-    private Long authorityId;
-
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
+    private Integer authority_id;
+    @ManyToOne
+    private Role role;
 
 }

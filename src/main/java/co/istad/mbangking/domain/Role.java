@@ -16,12 +16,11 @@ import java.util.List;
 public class Role {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
-    @Column(length =  50)
+    private Integer id;
+    @Column(unique = true,nullable = false,length = 100)
     private String name;
 
-    @ManyToOne
-    private List<Role> roles;
+    @ManyToMany(mappedBy = "roles", cascade = CascadeType.ALL)
+    private List<User> user;
 
 }
