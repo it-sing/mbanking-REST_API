@@ -1,4 +1,4 @@
-package co.istad.mbangking.domain;
+package co.istad.mbanking.domain;
 
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -10,15 +10,17 @@ import java.util.List;
 @NoArgsConstructor
 @Getter
 @Setter
-
 @Entity
-@Table(name = "role_authorities")
-public class RoleAuthorities {
+@Table(name = "authorities")
+public class Authority {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    private Integer authority_id;
-    @ManyToOne
-    private Role role;
+
+    private String name;
+
+    @ManyToMany(mappedBy = "authorities")
+    private List<Role> roles;
 
 }
