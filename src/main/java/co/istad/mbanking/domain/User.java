@@ -36,6 +36,9 @@ public class User {
     @Column(nullable = false)
     private String password;
 
+    @Column(nullable = false)
+    private String ConfirmPassword;
+
     @Column(length = 50)
     private String name;
 
