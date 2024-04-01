@@ -36,9 +36,6 @@ public class User {
     @Column(nullable = false)
     private String password;
 
-    @Column(nullable = false)
-    private String ConfirmPassword;
-
     @Column(length = 50)
     private String name;
 
@@ -56,7 +53,7 @@ public class User {
     private String khanOrDistrict;
 
     @Column(length = 100)
-    private String sangkatOrCommune;
+    private String sangKatOrCommune;
 
     @Column(length = 100)
     private String village;

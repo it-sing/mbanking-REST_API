@@ -8,7 +8,7 @@ public record UserPasswordRequest(
         @NotBlank
         String newPassword,
         @NotBlank
-        String confirmPassword
+        String newConfirmPassword
 ) {
 
 

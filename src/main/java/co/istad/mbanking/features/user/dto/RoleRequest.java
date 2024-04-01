@@ -1,7 +1,6 @@
 package co.istad.mbanking.features.user.dto;
 
-public record UserDetailsResponse(
+public record RoleRequest(
 
 ) {
-
 }

@@ -4,10 +4,9 @@ import co.istad.mbanking.domain.Role;
 import co.istad.mbanking.domain.User;
 import co.istad.mbanking.features.user.dto.UserCreateRequest;
 import co.istad.mbanking.features.user.dto.UserPasswordRequest;
+import co.istad.mbanking.features.user.dto.UserUpdateRequest;
 import co.istad.mbanking.mapper.UserMapper;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -15,7 +14,6 @@ import org.springframework.web.server.ResponseStatusException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 import java.util.UUID;
 
 @Service
@@ -28,75 +26,91 @@ public class UserServiceImpl implements UserService {
 
 
     @Override
-    public void changePassword(UserPasswordRequest userPasswordRequest, String uuid) {
-        // Find the user based on the UUID
+    public void UpdateUser(UserUpdateRequest userUpdateProfileRequest, String uuid) {
         User user = userRepository.findByUuid(uuid)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
 
-        // Check if the old password matches the current password
+        user.setCityOrProvince(userUpdateProfileRequest.newCityOrProvince());
+        user.setKhanOrDistrict(userUpdateProfileRequest.newKhanOrDistrict());
+        user.setSangKatOrCommune(userUpdateProfileRequest.newSangKatOrCommune());
+        user.setVillage(userUpdateProfileRequest.newVillage());
+        user.setStreet(userUpdateProfileRequest.newStreet());
+        user.setEmployeeType(userUpdateProfileRequest.newEmployeeType());
+        user.setPosition(userUpdateProfileRequest.newPosition());
+        user.setCompanyName(userUpdateProfileRequest.newCompanyName());
+        user.setMainSourceOfIncome(userUpdateProfileRequest.newMainSourceOfIncome());
+        user.setMonthlyIncomeRange(userUpdateProfileRequest.newMonthlyIncomeRange());
+
+        userRepository.save(user);
+    }
+
+    @Override
+    public void changePassword(UserPasswordRequest userPasswordRequest, String uuid) {
+        User user = userRepository.findByUuid(uuid)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
+
         if (!userPasswordRequest.oldPassword().equals(user.getPassword())) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Old password is incorrect");
         }
 
-        // Check if the new password matches the confirmed password
-        if (!userPasswordRequest.newPassword().equals(userPasswordRequest.confirmPassword())) {
+        if (!userPasswordRequest.newPassword().equals(userPasswordRequest.newConfirmPassword())) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "New password and confirmed password do not match");
         }
 
-        // Set the new password
         user.setPassword(userPasswordRequest.newPassword());
-        user.setConfirmPassword(userPasswordRequest.confirmPassword());
-        // Save the changes to the user
+
         userRepository.save(user);
     }
     @Override
-    public void createNew(UserCreateRequest userCreateRequest) {
+    public void createNew(UserCreateRequest request) {
+        User user = userMapper.fromUserCreateRequest(request);
 
-        if(userRepository.existsByPhoneNumber(userCreateRequest.phoneNumber())) {
-
-            throw  new ResponseStatusException(
+        if(userRepository.existsByNationalCardId(request.nationalCardId())){
+            throw new ResponseStatusException(
                     HttpStatus.CONFLICT,
-                    "User with this phone number already exists"
-            );
-        }
-        if(userRepository.existsByNationalCardId(userCreateRequest.nationalCardId())) {
-            throw  new ResponseStatusException(
-                    HttpStatus.CONFLICT,
-                    "National card with this number already exists"
-            );
-        }
-        if(userRepository.existsByStudentIdCard(userCreateRequest.studentIdCard())){
-            throw  new ResponseStatusException(
-                    HttpStatus.CONFLICT,
-                    "Student card with this number already exists"
-            );
-        }
-        if(!userCreateRequest.password()
-                .equals(userCreateRequest.confirmedPassword())){
-            throw  new ResponseStatusException(
-                    HttpStatus.CONFLICT,
-                    "Passwords do not match"
+                    "National card id is already existed!"
             );
         }
 
-        User user = userMapper.fromUserCreateRequest(userCreateRequest);
+        if(userRepository.existsByPhoneNumber(request.phoneNumber())){
+            throw new ResponseStatusException(
+                    HttpStatus.CONFLICT,
+                    "Phone number is already existed!"
+            );
+        }
+
+        if(userRepository.existsByStudentIdCard(request.studentIdCard())){
+            throw new ResponseStatusException(
+                    HttpStatus.NOT_FOUND,
+                    "Student card id is already existed!"
+            );
+        }
+
+        if(!request.password().equals(request.confirmedPassword())){
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    "Password does not match"
+            );
+        }
+
+
+        List<Role> roleList = new ArrayList<>();
+        Role role = roleRepository.findByName("USER")
+                .orElseThrow(()-> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND,
+                        "User role does not exist!"
+                ));
+
+        roleList.add(role);
 
         user.setUuid(UUID.randomUUID().toString());
-        user.setProfileImage("avatar.png");
+        user.setProfileImage("Avatar.png");
         user.setCreatedAt(LocalDateTime.now());
-        user.setIsDeleted(false);
         user.setIsBlocked(false);
-
-        List<Role> roles = new ArrayList<>();
-        Role userRole = roleRepository.findByName("USER")
-                .orElseThrow(() ->
-                        new ResponseStatusException(HttpStatus.NOT_FOUND,
-                                "Role USER has not been found!"));
-        roles.add(userRole);
-
-        user.setRoles(roles);
+        user.setIsDeleted(false);
+        user.setRoles(roleList);
 
         userRepository.save(user);
-
     }
+
 }
