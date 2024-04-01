@@ -1,6 +1,8 @@
 package co.istad.mbanking.domain;
 
+import co.istad.mbanking.features.user.dto.RoleRequest;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotEmpty;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -94,4 +96,7 @@ public class User {
     private Boolean isBlocked; // manage block status (when there is bad action happened)
 
     private LocalDateTime createdAt;
+
+
+
 }

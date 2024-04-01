@@ -1,4 +1,4 @@
-package co.istad.mbanking.features.account.dto;
+package co.istad.mbanking.features.accountType.dto;
 
 public record AccountTypeResponse(
         String alias,

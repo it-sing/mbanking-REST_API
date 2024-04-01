@@ -1,7 +1,7 @@
-package co.istad.mbanking.features.account;
+package co.istad.mbanking.features.accountType;
 
 import co.istad.mbanking.domain.AccountType;
-import co.istad.mbanking.features.account.dto.AccountTypeResponse;
+import co.istad.mbanking.features.accountType.dto.AccountTypeResponse;
 import co.istad.mbanking.mapper.AccountTypeMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -16,14 +16,14 @@ public  class AccountTypeServerImpl implements AccountTypeService{
     private final AccountTypeRepository accountTypeRepository;
     private final AccountTypeMapper accountTypeMapper;
     @Override
-    public List<AccountTypeResponse> findAllAccountTypes() {
+    public List<AccountTypeResponse> findList() {
         List<AccountType> accountTypes = accountTypeRepository.findAll();
-        return accountTypeMapper.toListAccountTypes(accountTypes);
+        return accountTypeMapper.toListAccountTypesResponse(accountTypes);
     }
 
     @Override
     public AccountTypeResponse findAccountTypeByAlias(String alias) {
-        AccountType accountType = accountTypeRepository.findByAliasIgnoreCase(alias).orElseThrow(
+        AccountType accountType = accountTypeRepository.findByAlias(alias).orElseThrow(
                 ()-> new ResponseStatusException(
                         HttpStatus.NOT_FOUND,
                         "Account does not exits with "+alias+" alias"

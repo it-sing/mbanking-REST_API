@@ -39,9 +39,9 @@ public record UserCreateRequest(
         String nationalCardId,
 
         @Size(max = 20)
-        String studentIdCard
-
-
+        String studentIdCard,
+        @NotEmpty
+        List<RoleRequest> roles
 ) {
 }
 
