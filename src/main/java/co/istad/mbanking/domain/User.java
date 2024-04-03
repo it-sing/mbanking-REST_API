@@ -94,6 +94,7 @@ public class User {
 
     private Boolean isDeleted; // manage delete status (admin want to disable or remove an account)
     private Boolean isBlocked; // manage block status (when there is bad action happened)
+    private Boolean isEnabled;
 
     private LocalDateTime createdAt;
 

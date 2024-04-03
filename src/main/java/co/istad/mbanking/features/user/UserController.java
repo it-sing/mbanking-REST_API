@@ -62,5 +62,16 @@ public class UserController {
     BasedMessage blockByUuid(@PathVariable String uuid) {
         return userService.blockByUuid(uuid);
     }
+    @PutMapping("/{uuid}/enable")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void enableUserByUuid(@PathVariable("uuid") String uuid) {
+        userService.enableByUuid(uuid);
+    }
+
+    @PutMapping("/{uuid}/disable")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void disableUserByUuid(@PathVariable("uuid") String uuid) {
+        userService.disableByUuid(uuid);
+    }
 }
 

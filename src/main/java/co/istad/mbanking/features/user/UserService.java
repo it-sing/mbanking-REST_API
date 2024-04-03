@@ -13,6 +13,8 @@ public interface UserService {
     UserDetailsResponse findByUuid(String uuid);
     BasedMessage blockByUuid(String uuid);
     void deleteByUuid(String uuid );
+    void enableByUuid(String uuid);
+    void disableByUuid(String uuid);
 
     Page<UserResponse> findList(int page , int limit);
 }

@@ -40,14 +40,28 @@ public class UserServiceImpl implements UserService {
         }
         userRepository.deleteByUuid(uuid);
     }
-
+    @Transactional
+    @Override
+    public void enableByUuid(String uuid) {
+        User user = userRepository.findByUuid(uuid)
+               .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
+        user.setIsEnabled(true);
+        userRepository.save(user);
+    }
+    @Transactional
+    @Override
+    public void disableByUuid(String uuid) {
+        User user = userRepository.findByUuid(uuid)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
+        user.setIsEnabled(false);
+        userRepository.save(user);
+    }
     @Override
     public Page<UserResponse> findList(int page, int limit) {
         PageRequest pageRequest = PageRequest.of(page, limit);
         Page<User> users = userRepository.findAll(pageRequest);
         return users.map(userMapper::toUserResponse);
     }
-
     @Override
     public UserResponse updateByUuid(String uuid, UserUpdateRequest userUpdateRequest) {
 
@@ -136,7 +150,7 @@ public class UserServiceImpl implements UserService {
         user.setCreatedAt(LocalDateTime.now());
         user.setIsBlocked(false);
         user.setIsDeleted(false);
-
+        user.setIsEnabled(false);
 
         List<Role> roles = new ArrayList<>();
         Role userRole = roleRepository.findByName("USER")
@@ -174,13 +188,11 @@ public class UserServiceImpl implements UserService {
     @Transactional
     @Override
     public BasedMessage blockByUuid(String uuid) {
-
         if (!userRepository.existsByUuid(uuid)) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND,
                     "User has not been found!");
         }
         userRepository.blockByUuid(uuid);
-
         return new BasedMessage("User has been blocked");
     }
 
