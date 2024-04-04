@@ -41,9 +41,9 @@ public class MediaController {
         return mediaService.listAllMedia();
     }
     @ResponseStatus(HttpStatus.ACCEPTED)
-    @GetMapping("/download/{mediaName}")
-    ResponseEntity<Resource> downloadMediaByName(@PathVariable String mediaName) {
-        Resource resource = mediaService.loadMediaResource(mediaName);
+    @GetMapping("/{mediaName}/download")
+    ResponseEntity<Resource> downloadMediaByName(@PathVariable String mediaName ) {
+        Resource resource = mediaService.downloadMediaByName(mediaName , "IMAGE");
         return ResponseEntity.ok()
                 .contentType(MediaType.parseMediaType("application/octet-stream"))
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + resource.getFilename() + "\"")

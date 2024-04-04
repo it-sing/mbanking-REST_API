@@ -146,7 +146,7 @@ public class MediaServiceImpl implements MediaService {
     }
 
     @Override
-    public Resource loadMediaResource(String mediaName) {
+    public Resource downloadMediaByName(String mediaName , String folderName) {
         try {
             Path path = Paths.get(serverPath, "IMAGE", mediaName);
             Resource resource = new UrlResource(path.toUri());
@@ -158,7 +158,4 @@ public class MediaServiceImpl implements MediaService {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Error loading media", e);
         }
     }
-
-
-
 }
