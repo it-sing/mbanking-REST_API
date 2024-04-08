@@ -24,6 +24,4 @@ public interface UserMapper {
             NullValuePropertyMappingStrategy.IGNORE)
     void fromUserUpdateRequest(UserUpdateRequest userUpdateRequest, @MappingTarget User user);
 
-    UserResponse toUserResponse(User user);
-
 }

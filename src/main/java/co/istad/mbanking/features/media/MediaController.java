@@ -41,12 +41,12 @@ public class MediaController {
         return mediaService.listAllMedia();
     }
     @ResponseStatus(HttpStatus.ACCEPTED)
-    @GetMapping("/download/{mediaName}")
+    @GetMapping(path = {"/{mediaName}/download"},
+            produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
     ResponseEntity<Resource> downloadMediaByName(@PathVariable String mediaName) {
-        Resource resource = mediaService.loadMediaResource(mediaName);
+        Resource resource = mediaService.loadMediaResource(mediaName,"IMAGE");
         return ResponseEntity.ok()
-                .contentType(MediaType.parseMediaType("application/octet-stream"))
-                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + resource.getFilename() + "\"")
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" +mediaName)
                 .body(resource);
     }
 }

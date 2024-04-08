@@ -14,7 +14,6 @@ public record MediaResponse(
         String uri,
         @JsonInclude( JsonInclude.Include.NON_NULL)
         Long size
-
 ) {
 
 }

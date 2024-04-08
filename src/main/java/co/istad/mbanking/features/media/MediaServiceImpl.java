@@ -146,19 +146,16 @@ public class MediaServiceImpl implements MediaService {
     }
 
     @Override
-    public Resource loadMediaResource(String mediaName) {
+    public Resource loadMediaResource(String mediaName ,String  folderName) {
+        // Create absolute path of media
+        Path path = Paths.get(serverPath + folderName + "\\" + mediaName);
         try {
-            Path path = Paths.get(serverPath, "IMAGE", mediaName);
-            Resource resource = new UrlResource(path.toUri());
-            if (!resource.exists() || !resource.isReadable()) {
-                throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Media not found");
-            }
-            return resource;
+            return new UrlResource(path.toUri());
         } catch (MalformedURLException e) {
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Error loading media", e);
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND,
+                    "Media has not been found!");
         }
+
     }
-
-
 
 }

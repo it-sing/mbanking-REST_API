@@ -8,33 +8,33 @@ import java.util.List;
 
 
 public record UserCreateRequest(
-        @NotNull
+        @NotNull(message = "Pin is required")
         @Max(9999)
         @Positive
         Integer pin,
 
-        @NotBlank
+        @NotBlank(message = "Phone number is required")
         @Size(max = 20)
         String phoneNumber,
 
-        @NotBlank
+        @NotBlank (message = "Email is required")
         String password,
 
-        @NotBlank
+        @NotBlank(message = "Confirm password is required")
         String confirmedPassword,
 
-        @NotBlank
+        @NotBlank (message = "Name is required")
         @Size(max = 40)
         String name,
 
-        @NotBlank
+        @NotBlank(message = "gender is required")
         @Size(max = 6)
         String gender,
 
-        @NotNull
+        @NotNull (message = "Date of birth is required")
         LocalDate dob,
 
-        @NotBlank
+        @NotBlank(message = "National card id is required")
         @Size(max = 20)
         String nationalCardId,
 

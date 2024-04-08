@@ -39,7 +39,6 @@ public class Account {
 
     @OneToMany(mappedBy = "account")
     private List<UserAccount> userAccountList;
-
     @OneToOne
     private Card card;
 

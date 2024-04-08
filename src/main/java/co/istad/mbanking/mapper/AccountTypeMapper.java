@@ -8,6 +8,7 @@ import java.util.List;
 
 @Mapper(componentModel = "spring")
 public interface AccountTypeMapper {
-    List<AccountTypeResponse> toListAccountTypesResponse(List<AccountType> accountTypes);
     AccountTypeResponse toAccountTypeResponse(AccountType accountType);
+
+    List<AccountTypeResponse> toListAccountTypesResponse(List<AccountType> accountTypes);
 }

@@ -8,6 +8,7 @@ import co.istad.mbanking.mapper.UserMapper;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
@@ -29,6 +30,8 @@ public class UserServiceImpl implements UserService {
     private final UserMapper userMapper;
     private final RoleRepository roleRepository;
 
+    @Value("${media.base-uri}")
+    private String mediaBaseUri;
 
     @Transactional
     @Override
@@ -196,4 +199,13 @@ public class UserServiceImpl implements UserService {
         return new BasedMessage("User has been blocked");
     }
 
+    @Override
+    public String updateProfileImage( String uuid ,String mediaName) {
+        User user = userRepository.findByUuid(uuid)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
+
+        user.setProfileImage(mediaName);
+        userRepository.save(user);
+        return mediaBaseUri + "IMAGE/" + mediaName;
+    }
 }
