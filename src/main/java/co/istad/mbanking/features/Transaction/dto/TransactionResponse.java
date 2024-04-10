@@ -1,4 +1,4 @@
-package co.istad.mbanking.Transaction.dto;
+package co.istad.mbanking.features.Transaction.dto;
 
 import co.istad.mbanking.features.account.dto.AccountSnippetResponse;
 

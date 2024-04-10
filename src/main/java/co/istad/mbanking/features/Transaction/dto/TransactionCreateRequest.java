@@ -1,4 +1,4 @@
-package co.istad.mbanking.Transaction.dto;
+package co.istad.mbanking.features.Transaction.dto;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;

@@ -1,7 +1,7 @@
-package co.istad.mbanking.Transaction;
+package co.istad.mbanking.features.Transaction;
 
-import co.istad.mbanking.Transaction.dto.TransactionCreateRequest;
-import co.istad.mbanking.Transaction.dto.TransactionResponse;
+import co.istad.mbanking.features.Transaction.dto.TransactionCreateRequest;
+import co.istad.mbanking.features.Transaction.dto.TransactionResponse;
 import co.istad.mbanking.domain.Account;
 import co.istad.mbanking.domain.Transaction;
 import co.istad.mbanking.features.account.AccountRepository;
@@ -10,6 +10,8 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -84,8 +86,33 @@ public class TransactionServiceImpl implements TransactionService{
     }
 
     @Override
-    public Page<TransactionResponse> findList(LocalDateTime transactionAt, String transactionType) {
+    public Page<TransactionResponse> findAll(int page, int size, String sortDirection, String transactionType) {
+        if (page < 0) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                    "Page number must be greater than or equal to zero");
+        }
 
-        return null;
+        if (size < 1) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                    "Size must be greater than or equal to one");
+        }
+
+        Sort.Direction direction = Sort.Direction.DESC;
+        if (sortDirection.equalsIgnoreCase("ASC")) {
+            direction = Sort.Direction.ASC;
+        }
+
+        Sort sortByTransactionAt = Sort.by(direction, "transactionAt");
+        PageRequest pageRequest = PageRequest.of(page, size, sortByTransactionAt);
+
+        Page<Transaction> transactionsPage;
+        if ("all".equalsIgnoreCase(transactionType)) {
+            transactionsPage = transactionRepository.findAll(pageRequest);
+        } else {
+            transactionsPage = transactionRepository.findByTransactionType(transactionType, pageRequest);
+        }
+
+        return transactionsPage.map(transactionMapper::toTransactionResponse);
     }
+
 }
