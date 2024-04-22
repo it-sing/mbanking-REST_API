@@ -25,7 +25,7 @@ public class TransactionController {
     Page<TransactionResponse> findAll(
             @RequestParam(required = false, defaultValue = "0") int page,
             @RequestParam(required = false, defaultValue = "25") int size,
-            @RequestParam (required = false, defaultValue = "DESC") String sortDirection,
+            @RequestParam(required = false, defaultValue = "DESC") String sortDirection,
             @RequestParam(required = false, defaultValue = "ALL") String transactionType
     ){
         return transactionService.findAll(page, size, sortDirection , transactionType);
